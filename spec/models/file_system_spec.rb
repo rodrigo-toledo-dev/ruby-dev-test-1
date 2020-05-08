@@ -41,15 +41,42 @@ RSpec.describe FileSystem, type: :model do
         end
 
         it 'should not be a root directory' do
-          expect(directory_children.is_root?).to be_falsey 
+          expect(directory_children.root?).to be_falsey 
         end
 
         it 'should have a parent directory' do
           expect(directory_children.parent).not_to be_nil
-          expect(directory_children.path).to have(2).items
           expect(FileSystem.roots).to have(1).items
         end
       end
     end
   end
+
+  describe "FileSystem save operations" do
+    let(:file_system){ build(:file_system) }
+    context "when is creating root directories" do
+      it "should not create directory without name" do
+        file_system.name = ''
+        expect(file_system.valid?).to be_falsey
+        expect(file_system.errors).to have(1).items
+      end
+
+      it 'should create a diretory' do
+        expect(file_system.save).to be_truthy
+        expect(file_system.root?).to be_truthy 
+      end
+    end
+
+    context "when is creating children directories" do
+      let!(:file_system){ create(:file_system) }
+      it 'should create a children diretory' do
+        children = file_system.children.build#(build(:file_system).attributes)
+        children.name = 'middle-directory'
+        expect(children.save).to be_truthy
+        expect(children.root?).to be_falsey
+      end
+    end
+    
+  end
+  
 end
