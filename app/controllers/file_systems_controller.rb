@@ -1,6 +1,7 @@
-class FileSystemController < ApplicationController
+class FileSystemsController < ApplicationController
   def index
     @roots = FileSystem.roots
+    @file_system = FileSystem.new
   end
 
   def create
@@ -15,6 +16,6 @@ class FileSystemController < ApplicationController
   protected
 
     def file_system_params
-      @file_system_params ||= params.require(:file_system).permit(:name, :files)
+      @file_system_params ||= params.require(:file_system).permit(:name, :parent_id, :file)
     end
 end

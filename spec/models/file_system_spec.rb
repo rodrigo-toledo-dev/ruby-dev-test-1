@@ -79,11 +79,36 @@ RSpec.describe FileSystem, type: :model do
 
   describe 'saving files inside directory' do
     let(:file_system){ build(:file_system) }
-    let(:file) { fixture_file_upload(Rails.root.join('spec','support', 'fileone.txt')) }
+    let!(:file) { fixture_file_upload(Rails.root.join('spec','support', 'fileone.txt')) }
+    
     context 'save file into a directory' do
       it 'should create a directory with file(s)' do
-        expect(FileSystem.saveAndAttachFiles({name: file_system.name, files: file})).to be_truthy
+        file_system_result = FileSystem.saveAndAttachFiles({name: file_system.name, files: file})
+        expect(file_system_result).to be_truthy
+        expect(file_system_result.files).to be_instance_of(ActiveStorage::Attached::Many)
+        
       end
     end
   end
+
+  describe "scenarios when have a parent" do
+    let!(:file_system) { create(:file_system) }
+    let(:file) { fixture_file_upload(Rails.root.join('spec','support', 'fileone.txt')) }
+
+    context "save directory inside into some directory" do
+      it "should save without files" do
+        expect(FileSystem.saveAndAttachFiles({name: 'new children', parent_id: file_system.id})).to be_truthy
+        file_system_children = FileSystem.where(id: file_system.child_ids).pluck(:name)
+        expect(file_system_children).to eql(['new children']) 
+      end
+      
+      it "should save with files" do
+        expect(FileSystem.saveAndAttachFiles({name: 'new children', parent_id: file_system.id, files: file})).to be_truthy
+        file_system_children = FileSystem.where(id: file_system.child_ids).pluck(:name)
+        expect(file_system_children).to eql(['new children'])
+      end
+    end
+    
+  end
+  
 end

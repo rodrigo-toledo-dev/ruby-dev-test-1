@@ -4,18 +4,21 @@ class FileSystem < ApplicationRecord
   has_many_attached :files
 
   def self.saveAndAttachFiles(attributes)
-    begin
+    if attributes[:parent_id].blank?
       file_system = FileSystem.new(attributes)
-      file_system.save!
-      unless attributes.try(:files).nil?
-        files.each do |file|
-          file_system.files.attach(file)
-        end
+    else
+      if attributes[:name].blank?
+        file_system = FileSystem.find(attributes[:parent_id])
+        attributes[:parent_id] = nil
+      else
+        file_system = FileSystem.new(attributes)
       end
-      true
-    rescue => exception
-      false
     end
     
+    file_system.save
+    unless attributes[:file].nil?
+      file_system.files.attach(attributes[:file])
+    end
+    file_system
   end
 end
