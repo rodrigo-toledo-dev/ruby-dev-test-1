@@ -78,11 +78,11 @@ RSpec.describe FileSystem, type: :model do
   end
 
   describe 'saving files inside directory' do
-    context 'save files into a directory' do
-      let(:file_system){ build(:file_system) }
-      let(:file) { fixture_file_upload(Rails.root.join('spec','support', 'fileone.txt')) }
-      it 'should create a directory with file' do
-        expect(file_system.saveAndAttachFiles([file])).to be_truthy
+    let(:file_system){ build(:file_system) }
+    let(:file) { fixture_file_upload(Rails.root.join('spec','support', 'fileone.txt')) }
+    context 'save file into a directory' do
+      it 'should create a directory with file(s)' do
+        expect(file_system.saveAndAttachFiles(file)).to be_truthy
       end
     end
   end
