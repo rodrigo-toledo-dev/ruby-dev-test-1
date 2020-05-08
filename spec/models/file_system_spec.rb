@@ -22,7 +22,6 @@ RSpec.describe FileSystem, type: :model do
     describe 'Directory operations' do
       subject { file_system }
       
-      
       context 'FileSystem directory without root' do
         it 'should save root directory' do
           expect(subject.save).to be_truthy
@@ -52,10 +51,10 @@ RSpec.describe FileSystem, type: :model do
     end
   end
 
-  describe "FileSystem save operations" do
+  describe 'FileSystem save operations' do
     let(:file_system){ build(:file_system) }
-    context "when is creating root directories" do
-      it "should not create directory without name" do
+    context 'when is creating root directories' do
+      it 'should not create directory without name' do
         file_system.name = ''
         expect(file_system.valid?).to be_falsey
         expect(file_system.errors).to have(1).items
@@ -67,7 +66,7 @@ RSpec.describe FileSystem, type: :model do
       end
     end
 
-    context "when is creating children directories" do
+    context 'when is creating children directories' do
       let!(:file_system){ create(:file_system) }
       it 'should create a children diretory' do
         children = file_system.children.build#(build(:file_system).attributes)
@@ -76,7 +75,15 @@ RSpec.describe FileSystem, type: :model do
         expect(children.root?).to be_falsey
       end
     end
-    
   end
-  
+
+  describe 'saving files inside directory' do
+    context 'save files into a directory' do
+      let(:file_system){ build(:file_system) }
+      let(:file) { fixture_file_upload(Rails.root.join('spec','support', 'fileone.txt')) }
+      it 'should create a directory with file' do
+        expect(file_system.saveAndAttachFiles([file])).to be_truthy
+      end
+    end
+  end
 end
