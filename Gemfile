@@ -68,4 +68,4 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # CUSTOM GEMS
-gem 'ancestry'
+gem 'awesome_nested_set'

@@ -1,1 +1,36 @@
-<%= FileSystem.roots.first.descendants.inspect %>
+<h1>Você deseja:</h1>
+<ul>
+<li><a href="javascript:showDirectoryContent()">Criar um diretório em</a> ou...</li>
+<li><a href="javascript:showFileContent()">Enviar arquivos para</a></li>
+</ul>
+<%= form_for :file_system do |f| %>
+<%= f.select :parent_id, options_for_select(nested_set_options(FileSystem) {|i| "#{'--' * i.level} #{i.name}" } ), prompt: 'Diretório Raiz' %>
+<div id="directory_content">
+  Digite o nome do diretório
+  <%= f.text_field :name %>
+  <br />
+  <%= f.submit 'Criar'%>
+</div>
+<div id="file_content">
+  Selecione seus arquivos
+  <%= f.file_field :files, multiple: true %>
+  <br />
+  <%= f.submit 'Enviar'%>
+</div>
+<% end %>
+<style>
+#file_content{
+  display: none
+}
+</style>
+<script>
+  function showDirectoryContent(){
+    $('#directory_content').show()
+    $('#file_content').hide()
+  }
+
+  function showFileContent(){
+    $('#directory_content').hide()
+    $('#file_content').show()
+  }
+</script>
