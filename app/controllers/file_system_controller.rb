@@ -4,7 +4,7 @@ class FileSystemController < ApplicationController
   end
 
   def create
-    if FileSystem.createAndSendFiles(file_system_params)
+    if FileSystem.saveAndAttachFiles(file_system_params)
       flash[:success] = 'Ação efetuada com sucesso'
     else
       flash[:error] = 'Erro na operação, verifique os campos'

@@ -3,12 +3,19 @@ class FileSystem < ApplicationRecord
   validates :name, presence: true
   has_many_attached :files
 
-  def saveAndAttachFiles(files=nil)
-    self.save
-    unless files.nil?
-      files.each do |file|
-        self.files.attach(file)
+  def self.saveAndAttachFiles(attributes)
+    begin
+      file_system = FileSystem.new(attributes)
+      file_system.save!
+      unless attributes.try(:files).nil?
+        files.each do |file|
+          file_system.files.attach(file)
+        end
       end
+      true
+    rescue => exception
+      false
     end
+    
   end
 end
