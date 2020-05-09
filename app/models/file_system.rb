@@ -1,24 +1,23 @@
 class FileSystem < ApplicationRecord
   acts_as_nested_set
-  validates :name, presence: true
+  validates :name, presence: true, if: :parent_id_blank?
   has_many_attached :files
 
   def self.saveAndAttachFiles(attributes)
-    if attributes[:parent_id].blank?
-      file_system = FileSystem.new(attributes)
-    else
-      if attributes[:name].blank?
-        file_system = FileSystem.find(attributes[:parent_id])
-        attributes[:parent_id] = nil
-      else
-        file_system = FileSystem.new(attributes)
-      end
+    return false if attributes[:name].blank? && attributes[:parent_id].blank?
+    file_system = FileSystem.new
+    if attributes[:name].blank?
+      file_system = FileSystem.find(attributes[:parent_id])
+      attributes[:parent_id] = nil
     end
-    
+    file_system.attributes = attributes
     file_system.save
-    unless attributes[:file].nil?
-      file_system.files.attach(attributes[:file])
-    end
     file_system
+  end
+
+  protected
+
+  def parent_id_blank?
+    parent_id.blank?
   end
 end

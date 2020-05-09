@@ -1,16 +1,22 @@
-<h1>Você deseja:</h1>
-<%flash.each do |key,message|%>
-<%= message%><br />
-<%end%>
-<%= form_for @file_system do |f| %>
-  <%= f.select :parent_id, options_for_select(file_system_options), prompt: 'Diretório Raiz' %>
-  as ações serão refletidas aqui
-  <hr />
-  <%=f.label :name, 'Criar diretório com nome...' %>
-  <%= f.text_field :name %>
-  <br />
-  <%= f.label :file, 'e/ou envie arquivos também' %>
-  <%= f.file_field :file %>
-  <br />
-  <%= f.submit 'Salvar' %>
-<% end %>
+<div class="container">
+<div id="content">
+  <h1>A organização de pastas e arquivos chegou</h1>
+  <% flash.each do |key,message|%>
+    <div class="flash_message">
+      <%= message%>
+    </div>
+  <%end%>
+  <%= form_for @file_system do |f| %>
+    <%=f.label :parent_id, 'As ações serão refletidas em...' %>
+    <%= f.select :parent_id, options_for_select(file_system_options), prompt: 'Diretório Raiz' %>
+    <hr />
+    <%=f.label :name, 'Criar diretório com nome...' %>
+    <%= f.text_field :name %>
+    <hr />
+    <%= f.label :files, 'e/ou envie arquivos também' %>
+    <%= f.file_field :files, multiple: true %>
+    <hr />
+    <%= f.submit 'Salvar' %>
+  <% end %>
+</div>
+</div>
