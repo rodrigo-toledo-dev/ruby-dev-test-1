@@ -1,4 +1,4 @@
-class CreateFileSystems < ActiveRecord::Migration[6.0]
+class CreateFileSystems < ActiveRecord::Migration[5.2]
   def change
     create_table :file_systems do |t|
       t.string :name

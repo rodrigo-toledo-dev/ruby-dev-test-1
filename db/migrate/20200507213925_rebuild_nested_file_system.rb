@@ -1,4 +1,4 @@
-class RebuildNestedFileSystem < ActiveRecord::Migration[6.0]
+class RebuildNestedFileSystem < ActiveRecord::Migration[5.2]
   def up
     add_column :file_systems, :parent_id, :integer # Comment this line if your project already has this column
     add_column :file_systems, :lft,       :integer

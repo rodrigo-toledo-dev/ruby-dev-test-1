@@ -1,22 +1,17 @@
 class FileSystemsController < ApplicationController
   def index
     @roots = FileSystem.roots
-    @file_system = FileSystem.new
   end
 
   def create
     if file_system = FileSystem.saveAndAttachFiles(file_system_params)
-      # unless params[:file_system][:files].nil?
-      #   params[:file_system][:files].each do |file|
-      #     raise file.inspect
-      #     file_system.files.attach(file)
-      #   end
-      # end
       flash[:success] = 'Ação efetuada com sucesso'
+      redirect_to root_path
     else
       flash[:error] = 'Erro na operação, verifique os campos'
+      render :index
     end
-    redirect_to root_path
+    
   end
 
   protected

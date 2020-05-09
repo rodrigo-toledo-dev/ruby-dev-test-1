@@ -6,7 +6,7 @@
       <%= message%>
     </div>
   <%end%>
-  <%= form_for @file_system do |f| %>
+  <%= form_for :file_system do |f| %>
     <%=f.label :parent_id, 'As ações serão refletidas em...' %>
     <%= f.select :parent_id, options_for_select(file_system_options), prompt: 'Diretório Raiz' %>
     <hr />
